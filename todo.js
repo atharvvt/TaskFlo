@@ -1,55 +1,57 @@
-var listnode = document.getElementsByTagName("LI");
+const itemsArray = localStorage.getItem("items")
+  ? JSON.parse(localStorage.getItem("items"))
+  : [];
 
-for (var i = 0; i < listnode.length; i++) {
-  var newlistitem = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  newlistitem.className = "close";
-  newlistitem.appendChild(txt);
-  listnode[i].appendChild(newlistitem);
+console.log("itemsArray: ", itemsArray);
+
+
+function clickOnAdd() {
+  var inputValue = document.getElementById("userInput").value.trim();
+  if (inputValue === "") {
+    alert("Please enter something");
+  } else {
+    createItem(inputValue);
+  }
 }
 
-var close = document.getElementsByClassName("close");
-for (var i = 0; i < close.length; i++) {
-  close[i].onclick = function () {
-    var div = this.parentElement;
-    div.style.display = "none";
-  };
+//localStorage.removeItem("items");
+
+function displayItem() {
+  let items = "";
+  for (let i = 0; i < itemsArray.length; i++) {
+    items += `
+    <li class="list-group-item">${itemsArray[i]}<span onclick = "deleteItem()" class = "close" id = "close">&times</span></li>
+    `;
+    document.getElementById("todolist").innerHTML = items;
+  }
 }
 
-var list = document.querySelector("ul");
-list.addEventListener(
-  "click",
-  function (ev) {
-    if (ev.target.tagName === "LI") {
-      ev.target.classList.toggle("checked");
+function createItem(item) {
+  itemsArray.push(item);
+  localStorage.setItem("items", JSON.stringify(itemsArray));
+  location.reload();
+}
+
+function deleteItem(i) {
+  itemsArray.splice(i, 1);
+  localStorage.setItem("items", JSON.stringify(itemsArray));
+  location.reload();
+}
+
+function deleteItems() {
+  let delebtn = document.querySelector("#close");
+  if (delebtn == null) {
+    console.log("itsnull");
+  } else {
+    for (let i = 0; i < delebtn.length; i++) {
+      addEventListener("click", () => {
+        deleteItem(i);
+      });
     }
-  },
-  false
-);
-
-function func(){
-    var li = document.createElement("li");
-    var word = document.getElementById("myInput").value;
-    var txtnode = document.createTextNode(word);
-    li.appendChild(txtnode);
-    if (word == "") {
-        alert("Enter something");
-      } else {
-        var addedlist = document.getElementById("todolist").appendChild(li);
-      }
-    localStorage.setItem(word,addedlist);
-
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    li.appendChild(span);
-
-    for (i = 0; i < close.length; i++) {
-        close[i].onclick = function () {
-          var div = this.parentElement;
-          div.style.display = "none";
-        };
-      }
+  }
 }
 
+window.onload = function () {
+  displayItem();
+  deleteItems();
+};

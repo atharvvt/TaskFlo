@@ -20,9 +20,13 @@ function displayItem() {
   let items = "";
   for (let i = 0; i < itemsArray.length; i++) {
     items += `
-    <li class="list-group-item">${itemsArray[i]}<span onclick = "deleteItem()" class = "close" id = "close">&times</span></li>
+    <li id = "listitem" onclick="toggleCheck()" class="list-group-item newlistitem">${itemsArray[i]}<span onclick = "deleteItem()" class = "close" id = "close">&times</span></li>
     `;
     document.getElementById("todolist").innerHTML = items;
+
+    var list = document.querySelector("#listitem");
+    list.addEventListener('dblclick', toggleCheck, false)
+
   }
 }
 
@@ -50,6 +54,12 @@ function deleteItems() {
     }
   }
 }
+
+function toggleCheck() {
+    if (event.target.tagName === 'LI') {
+      event.target.classList.toggle('checked');
+    }
+  }
 
 window.onload = function () {
   displayItem();
